@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ToDo List</title>
+    <style>
+        body{font-family:sans-serif;background:#f4f4f4;padding:20px}
+        h1{text-align:center}
+        #todo-form{display:flex;justify-content:center;margin-bottom:20px}
+        #todo-input{padding:10px;width:300px;border-radius:5px;border:1px solid #ccc}
+        #add-btn{padding:10px;border:none;background:#28a745;color:white;border-radius:5px;margin-left:5px;cursor:pointer}
+        #add-btn:hover{background:#218838}
+        #todo-list{list-style:none;padding:0;max-width:400px;margin:0 auto}
+        .todo-item{display:flex;justify-content:space-between;padding:10px;border-bottom:1px solid #ccc}
+        .completed{text-decoration:line-through;color:gray}
+        .delete-btn{background:#dc3545;color:white;border:none;padding:5px 10px;border-radius:5px;cursor:pointer}
+        .delete-btn:hover{background:#c82333}
+    </style>
+</head>
+<body>
+<h1>Ma ToDo List</h1>
+<div id="todo-form">
+    <input type="text" id="todo-input" placeholder="Ajouter une tâche">
+    <button id="add-btn">Ajouter</button>
+</div>
+<ul id="todo-list"></ul>
+<script>
+    const todoInput=document.getElementById('todo-input');
+    const addBtn=document.getElementById('add-btn');
+    const todoList=document.getElementById('todo-list');
+    let todos=[{id:1,title:"Tâche exemple",completed:false}];
+    function renderTodos(){
+    todoList.innerHTML='';
+    todos.forEach(todo=>{
+    const li=document.createElement('li');
+    li.className='todo-item'+(todo.completed?' completed':'');
+    li.innerHTML=`<span>${todo.title}</span><button class="delete-btn">Supprimer</button>`;
+    li.querySelector('span').addEventListener('click',()=>{todo.completed=!todo.completed;renderTodos();});
+    li.querySelector('.delete-btn').addEventListener('click',()=>{todos=todos.filter(t=>t.id!==todo.id);renderTodos();});
+    todoList.appendChild(li);
+    });
+    }
+    addBtn.addEventListener('click',()=>{const title=todoInput.value.trim();if(!title)return;todos.push({id:Date.now(),title,completed:false});todoInput.value='';renderTodos();});
+    todoInput.addEventListener('keydown',e=>{if(e.key==='Enter'){const title=todoInput.value.trim();if(!title)return;todos.push({id:Date.now(),title,completed:false});todoInput.value='';renderTodos();}});
+    document.addEventListener('DOMContentLoaded',renderTodos);
+</script>
+</body>
+</html>
